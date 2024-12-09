@@ -55,6 +55,18 @@ export const dashboardSlice = createSlice({
         },
       }
     },
+    addBooster: (state) => {
+      state.inventory = {
+        ...state.inventory,
+        boosts: {
+          ...state.inventory.boosts,
+          diggingSpeedMultiplier:
+            state.inventory.boosts.diggingSpeedMultiplier + 0.05,
+          energyProductionMultiplier:
+            state.inventory.boosts.energyProductionMultiplier + 0.05,
+        },
+      }
+    },
     incrementDepth: (state) => {
       state.depth += 1
     },
@@ -68,7 +80,7 @@ export const dashboardSlice = createSlice({
   },
 })
 
-export const { addDigger, addEnergy, incrementDepth, levelUp } =
+export const { addBooster, addDigger, addEnergy, incrementDepth, levelUp } =
   dashboardSlice.actions
 
 export default dashboardSlice.reducer

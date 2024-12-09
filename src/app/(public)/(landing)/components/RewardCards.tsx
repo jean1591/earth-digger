@@ -1,7 +1,12 @@
 'use client'
 
-import { PiGift, PiLightning, PiRobot } from 'react-icons/pi'
-import { addDigger, addEnergy, levelUp } from '@/store/features/dashboard/slice'
+import { PiGift, PiLightning, PiRobot, PiSpeedometer } from 'react-icons/pi'
+import {
+  addBooster,
+  addDigger,
+  addEnergy,
+  levelUp,
+} from '@/store/features/dashboard/slice'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { IconType } from 'react-icons'
@@ -15,11 +20,11 @@ const variants = {
   visible: { opacity: 1, y: 0 },
 }
 
-// TODO: create card that display robots in dashboard and see if clicking add robots
 type PrizeFunction = () =>
+  | ReturnType<typeof addBooster>
   | ReturnType<typeof addDigger>
   | ReturnType<typeof addEnergy>
-type RewardType = 'addDigger' | 'addEnergy'
+type RewardType = 'addDigger' | 'addBooster' | 'addEnergy'
 interface Reward {
   description: string
   icon: IconType
@@ -41,6 +46,12 @@ const rewardsMapper: RewardMapper = {
     label: 'Energy producer',
     prize: addEnergy,
   },
+  addBooster: {
+    description: 'Boost all diggers and enery producers stats',
+    icon: PiSpeedometer,
+    label: 'Booster',
+    prize: addBooster,
+  },
 }
 
 export const RewardCards = () => {
@@ -58,7 +69,7 @@ export const RewardCards = () => {
           <Card reward={rewardsMapper['addEnergy']} />
         </motion.div>
         <motion.div animate="visible" initial="hidden" variants={variants}>
-          <Card reward={rewardsMapper['addEnergy']} />
+          <Card reward={rewardsMapper['addBooster']} />
         </motion.div>
       </div>
     </Modal>
