@@ -16,7 +16,7 @@ export const Inventory = () => {
   } = inventory
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <div className="space-y-2">
         <p className="text-lg font-bold">Robots</p>
         <InventoryLine label="Diggers" value={diggers} />

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 interface Inventory {
   robots: { manual: 1; diggers: number; energy: number; boosters: number }
@@ -70,6 +70,9 @@ export const dashboardSlice = createSlice({
     incrementDepth: (state) => {
       state.depth += 1
     },
+    incrementXDepth: (state, action: PayloadAction<number>) => {
+      state.depth += action.payload
+    },
     levelUp: (state) => {
       state.level += 1
       state.currentLevelXpBoundaries = {
@@ -80,7 +83,13 @@ export const dashboardSlice = createSlice({
   },
 })
 
-export const { addBooster, addDigger, addEnergy, incrementDepth, levelUp } =
-  dashboardSlice.actions
+export const {
+  addBooster,
+  addDigger,
+  addEnergy,
+  incrementDepth,
+  incrementXDepth,
+  levelUp,
+} = dashboardSlice.actions
 
 export default dashboardSlice.reducer

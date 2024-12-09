@@ -7,13 +7,16 @@ import {
   addEnergy,
   levelUp,
 } from '@/store/features/dashboard/slice'
+import {
+  resumeGame,
+  setDisplayRewardCards,
+} from '@/store/features/interactions/slice'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { IconType } from 'react-icons'
 import { Modal } from '@/components/Modal'
 import { RootState } from '@/store/store'
 import { motion } from 'framer-motion'
-import { setDisplayRewardCards } from '@/store/features/interactions/slice'
 
 const variants = {
   hidden: { opacity: 0, y: 100 },
@@ -85,6 +88,7 @@ const Card = ({ reward }: { reward: Reward }) => {
     dispatch(setDisplayRewardCards(false))
     dispatch(levelUp())
     dispatch(prize())
+    dispatch(resumeGame())
   }
 
   return (
