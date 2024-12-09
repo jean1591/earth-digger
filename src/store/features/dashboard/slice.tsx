@@ -51,7 +51,7 @@ export const dashboardSlice = createSlice({
         ...state.inventory,
         robots: {
           ...state.inventory.robots,
-          diggers: state.inventory.robots.diggers + 1,
+          energy: state.inventory.robots.energy + 1,
         },
       }
     },
