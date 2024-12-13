@@ -15,19 +15,15 @@ export const DigButton = () => {
   const {
     inventory: {
       robots: { diggers },
-      boosts: { diggingSpeedMultiplier },
     },
+    stats: { diggingSpeed },
   } = useSelector((state: RootState) => state.dashboard)
   const { state } = useSelector((state: RootState) => state.interactions)
 
   useEffect(() => {
     if (state === 'play') {
       const interval = setInterval(() => {
-        dispatch(
-          incrementXDepth(
-            Math.round(diggers * diggingSpeedMultiplier * 10) / 10
-          )
-        )
+        dispatch(incrementXDepth(diggingSpeed))
       }, 1000)
 
       return () => clearInterval(interval)
