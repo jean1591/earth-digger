@@ -4,7 +4,7 @@ const ENERGY_CONSUMPTION_PER_SECOND = 20
 const ENERGY_PRODUCTION_PER_SECOND = 30
 const BASE_ENERGY_PRODUCTION = 80
 
-interface Inventory {
+export interface Inventory {
   robots: { manual: 1; diggers: number; energy: number; boosters: number }
   boosts: {
     diggingSpeedMultiplier: number
@@ -123,6 +123,7 @@ export const dashboardSlice = createSlice({
         energyProduction: updatedEnergyProduction,
       })
     },
+    // TODO: seems to have a problem with the energy production formula
     addBooster: (state) => {
       const { robots, boosts } = state.inventory
       const { boosters, diggers, energy } = robots

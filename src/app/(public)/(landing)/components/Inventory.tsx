@@ -2,12 +2,35 @@
 
 import { useEffect, useState } from 'react'
 
+import { Inventory as InventoryType } from '@/store/features/dashboard/slice'
 import { RootState } from '@/store/store'
 import { classNames } from '@/utils/classNames'
 import { useSelector } from 'react-redux'
 
 export const Inventory = () => {
   const { inventory } = useSelector((state: RootState) => state.dashboard)
+
+  const displayRobots = (inventory: InventoryType) => {
+    const {
+      robots: { boosters, diggers, energy },
+    } = inventory
+    return [boosters, diggers, energy].some((value) => value > 0)
+  }
+
+  const displayMultipliers = (inventory: InventoryType) => {
+    const {
+      boosts: {
+        diggingSpeedMultiplier,
+        energyProductionMultiplier,
+        xpMultiplier,
+      },
+    } = inventory
+    return [
+      diggingSpeedMultiplier,
+      energyProductionMultiplier,
+      xpMultiplier,
+    ].some((value) => value > 1)
+  }
 
   const {
     boosts: {
@@ -20,35 +43,43 @@ export const Inventory = () => {
 
   return (
     <div className="space-y-8">
-      <div className="space-y-2">
-        <p className="text-lg font-bold">Robots</p>
-        <InventoryLine display={diggers > 0} label="Diggers" value={diggers} />
-        <InventoryLine display={energy > 0} label="Energy" value={energy} />
-        <InventoryLine
-          display={boosters > 0}
-          label="Boosters"
-          value={boosters}
-        />
-      </div>
+      {displayRobots(inventory) && (
+        <div className="space-y-2">
+          <p className="text-lg font-bold">Robots</p>
+          <InventoryLine
+            display={diggers > 0}
+            label="Diggers"
+            value={diggers}
+          />
+          <InventoryLine display={energy > 0} label="Energy" value={energy} />
+          <InventoryLine
+            display={boosters > 0}
+            label="Boosters"
+            value={boosters}
+          />
+        </div>
+      )}
 
-      <div className="space-y-2">
-        <p className="text-lg font-bold">Multipliers</p>
-        <InventoryLine
-          display={diggingSpeedMultiplier > 1}
-          label="Digging speed"
-          value={diggingSpeedMultiplier}
-        />
-        <InventoryLine
-          display={energyProductionMultiplier > 1}
-          label="Energy"
-          value={energyProductionMultiplier}
-        />
-        <InventoryLine
-          display={xpMultiplier > 1}
-          label="XP"
-          value={xpMultiplier}
-        />
-      </div>
+      {displayMultipliers(inventory) && (
+        <div className="space-y-2">
+          <p className="text-lg font-bold">Multipliers</p>
+          <InventoryLine
+            display={diggingSpeedMultiplier > 1}
+            label="Digging speed"
+            value={diggingSpeedMultiplier}
+          />
+          <InventoryLine
+            display={energyProductionMultiplier > 1}
+            label="Energy"
+            value={energyProductionMultiplier}
+          />
+          <InventoryLine
+            display={xpMultiplier > 1}
+            label="XP"
+            value={xpMultiplier}
+          />
+        </div>
+      )}
     </div>
   )
 }
