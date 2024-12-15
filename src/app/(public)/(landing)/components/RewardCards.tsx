@@ -1,12 +1,24 @@
 'use client'
 
-import { PiGift, PiLightning, PiRobot, PiSpeedometer } from 'react-icons/pi'
 import {
+  ENERGY_PRODUCTION_PER_SECOND,
+  Inventory,
+  Stats,
   addBooster,
   addDigger,
   addEnergy,
   levelUp,
+  upgradeDigger,
+  upgradeEnergy,
 } from '@/store/features/dashboard/slice'
+import {
+  PiBatteryCharging,
+  PiGift,
+  PiLightning,
+  PiRecycle,
+  PiRobot,
+  PiSpeedometer,
+} from 'react-icons/pi'
 import {
   resumeGame,
   setDisplayRewardCards,
@@ -16,6 +28,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IconType } from 'react-icons'
 import { Modal } from '@/components/Modal'
 import { RootState } from '@/store/store'
+import { classNames } from '@/utils/classNames'
 import { motion } from 'framer-motion'
 
 const variants = {
@@ -27,7 +40,14 @@ type PrizeFunction = () =>
   | ReturnType<typeof addBooster>
   | ReturnType<typeof addDigger>
   | ReturnType<typeof addEnergy>
-type RewardType = 'addDigger' | 'addBooster' | 'addEnergy'
+  | ReturnType<typeof upgradeDigger>
+  | ReturnType<typeof upgradeEnergy>
+type RewardType =
+  | 'addBooster'
+  | 'addDigger'
+  | 'addEnergy'
+  | 'upgradeDigger'
+  | 'upgradeEnergy'
 interface Reward {
   description: string
   icon: IconType
@@ -38,13 +58,13 @@ type RewardMapper = Record<RewardType, Reward>
 
 const rewardsMapper: RewardMapper = {
   addDigger: {
-    description: 'Add a new auto-digger',
+    description: 'Add a new auto-digger - Consume 20 ⚡️/s',
     icon: PiRobot,
     label: 'Auto-digger',
     prize: addDigger,
   },
   addEnergy: {
-    description: 'Add a robot that produces energy',
+    description: 'Add a robot that produces energy - Produce 30 ⚡️/s',
     icon: PiLightning,
     label: 'Energy producer',
     prize: addEnergy,
@@ -55,25 +75,77 @@ const rewardsMapper: RewardMapper = {
     label: 'Booster',
     prize: addBooster,
   },
+  upgradeDigger: {
+    description: 'Upgrade all diggers with a 5% boost',
+    icon: PiRecycle,
+    label: 'Digger upgrade',
+    prize: upgradeDigger,
+  },
+  upgradeEnergy: {
+    description: 'Upgrade all energy producers with a 5% boost',
+    icon: PiBatteryCharging,
+    label: 'Energy upgrade',
+    prize: upgradeEnergy,
+  },
+}
+
+const computeRewards = (
+  level: number,
+  inventory: Inventory,
+  stats: Stats
+): RewardType[] => {
+  const { energyConsumption, energyProduction } = stats
+
+  let rewards: RewardType[] = []
+
+  if (level === 0) {
+    rewards.push('addDigger')
+
+    return rewards
+  }
+
+  if (level === 1) {
+    rewards.push('addDigger')
+    rewards.push('addEnergy')
+    rewards.push('addBooster')
+
+    return rewards
+  }
+
+  // TODO: change to add display stats
+  if (energyConsumption >= energyProduction - ENERGY_PRODUCTION_PER_SECOND) {
+    rewards.push('addEnergy')
+  }
+
+  rewards.push('addDigger')
+  rewards.push('addBooster')
+
+  return rewards
 }
 
 export const RewardCards = () => {
   const { displayRewardCards } = useSelector(
     (state: RootState) => state.interactions
   )
+  const { level, inventory, stats } = useSelector(
+    (state: RootState) => state.dashboard
+  )
+
+  const rewards = computeRewards(level, inventory, stats)
 
   return (
     <Modal title="Level Up !" open={displayRewardCards} icon={PiGift}>
-      <div className="grid grid-cols-3 gap-4">
-        <motion.div animate="visible" initial="hidden" variants={variants}>
-          <Card reward={rewardsMapper['addDigger']} />
-        </motion.div>
-        <motion.div animate="visible" initial="hidden" variants={variants}>
-          <Card reward={rewardsMapper['addEnergy']} />
-        </motion.div>
-        <motion.div animate="visible" initial="hidden" variants={variants}>
-          <Card reward={rewardsMapper['addBooster']} />
-        </motion.div>
+      <div className={classNames(`grid grid-cols-${rewards.length} gap-4`)}>
+        {rewards.map((reward) => (
+          <motion.div
+            key={reward}
+            animate="visible"
+            initial="hidden"
+            variants={variants}
+          >
+            <Card reward={rewardsMapper[reward]} />
+          </motion.div>
+        ))}
       </div>
     </Modal>
   )

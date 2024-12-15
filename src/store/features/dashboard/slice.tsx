@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const ENERGY_CONSUMPTION_PER_SECOND = 20
-const ENERGY_PRODUCTION_PER_SECOND = 30
+export const ENERGY_PRODUCTION_PER_SECOND = 30
 const BASE_ENERGY_PRODUCTION = 30
+const BOOST_VALUE = 0.1
 
 export interface Inventory {
   robots: { manual: 1; diggers: number; energy: number; boosters: number }
@@ -13,16 +14,18 @@ export interface Inventory {
   }
 }
 
+export interface Stats {
+  diggingSpeed: number
+  energyConsumption: number
+  energyProduction: number
+}
+
 export interface DashboardSlice {
   currentLevelXpBoundaries: { low: number; high: number }
   depth: number | 0
   level: number | 0
   inventory: Inventory
-  stats: {
-    diggingSpeed: number
-    energyConsumption: number
-    energyProduction: number
-  }
+  stats: Stats
 }
 
 const initialState: DashboardSlice = {
@@ -128,9 +131,9 @@ export const dashboardSlice = createSlice({
       const updatedBoostersCount = boosters + 1
 
       const { diggingSpeedMultiplier, energyProductionMultiplier } = boosts
-      const updatedDiggingSpeedMultiplier = diggingSpeedMultiplier + 0.05
+      const updatedDiggingSpeedMultiplier = diggingSpeedMultiplier + BOOST_VALUE
       const updatedEnergyProductionMultiplier =
-        energyProductionMultiplier + 0.05
+        energyProductionMultiplier + BOOST_VALUE
 
       const updatedEnergyProduction =
         (energy * ENERGY_PRODUCTION_PER_SECOND + BASE_ENERGY_PRODUCTION) *
@@ -170,6 +173,55 @@ export const dashboardSlice = createSlice({
         high: computeNextLevelFormula(state.level + 1),
       }
     },
+    upgradeDigger: (state) => {
+      const { robots, boosts } = state.inventory
+      const { diggers, energy } = robots
+
+      const { diggingSpeedMultiplier, energyProductionMultiplier } = boosts
+      const updatedDiggingSpeedMultiplier = diggingSpeedMultiplier + BOOST_VALUE
+
+      const updatedEnergyProduction =
+        (energy * ENERGY_PRODUCTION_PER_SECOND + BASE_ENERGY_PRODUCTION) *
+        energyProductionMultiplier
+
+      state.inventory = {
+        ...state.inventory,
+        boosts: {
+          ...state.inventory.boosts,
+          diggingSpeedMultiplier: updatedDiggingSpeedMultiplier,
+        },
+      }
+
+      state.stats.diggingSpeed = computeDiggingSpeed({
+        diggers: diggers,
+        diggingSpeedMultiplier: updatedDiggingSpeedMultiplier,
+        energyProduction: updatedEnergyProduction,
+      })
+    },
+    upgradeEnergy: (state) => {
+      const {
+        robots: { energy },
+        boosts,
+      } = state.inventory
+
+      const { energyProductionMultiplier } = boosts
+      const updatedEnergyProductionMultiplier =
+        energyProductionMultiplier + BOOST_VALUE
+
+      const updatedEnergyProduction =
+        (energy * ENERGY_PRODUCTION_PER_SECOND + BASE_ENERGY_PRODUCTION) *
+        updatedEnergyProductionMultiplier
+
+      state.inventory = {
+        ...state.inventory,
+        boosts: {
+          ...state.inventory.boosts,
+          energyProductionMultiplier: updatedEnergyProductionMultiplier,
+        },
+      }
+
+      state.stats.energyProduction = updatedEnergyProduction
+    },
   },
 })
 
@@ -180,6 +232,8 @@ export const {
   incrementDepth,
   incrementXDepth,
   levelUp,
+  upgradeDigger,
+  upgradeEnergy,
 } = dashboardSlice.actions
 
 export default dashboardSlice.reducer
