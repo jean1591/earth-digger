@@ -1,7 +1,8 @@
 'use client'
 
+import { SimpleStatCard, StatCard } from './StatCard'
+
 import { RootState } from '@/store/store'
-import { StatCard } from './StatCard'
 import { useSelector } from 'react-redux'
 
 export const Stats = () => {
@@ -10,7 +11,7 @@ export const Stats = () => {
 
   return (
     <div className="grid grid-cols-4 gap-4">
-      <StatCard value={depth.toFixed(2)} unit="m" label="Depth" />
+      <SimpleStatCard value={depth.toFixed(2)} unit="m" label="Depth" />
       <StatCard
         value={diggingSpeed.toFixed(2)}
         unit="m/s"
