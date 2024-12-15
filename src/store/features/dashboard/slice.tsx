@@ -134,10 +134,8 @@ export const dashboardSlice = createSlice({
         energyProductionMultiplier + 0.05
 
       const updatedEnergyProduction =
-        energy *
-          ENERGY_PRODUCTION_PER_SECOND *
-          updatedEnergyProductionMultiplier +
-        BASE_ENERGY_PRODUCTION
+        (energy * ENERGY_PRODUCTION_PER_SECOND + BASE_ENERGY_PRODUCTION) *
+        updatedEnergyProductionMultiplier
 
       state.inventory = {
         ...state.inventory,

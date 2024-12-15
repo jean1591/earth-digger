@@ -1,6 +1,9 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import { RootState } from '@/store/store'
+import { classNames } from '@/utils/classNames'
 import { useSelector } from 'react-redux'
 
 export const Inventory = () => {
@@ -35,9 +38,32 @@ export const Inventory = () => {
 }
 
 const InventoryLine = ({ label, value }: { label: string; value: number }) => {
+  const [highlight, setHighlight] = useState(false)
+
+  useEffect(() => {
+    setHighlight(true)
+    const timeoutId = setTimeout(() => {
+      setHighlight(false)
+    }, 200)
+
+    return () => clearTimeout(timeoutId)
+  }, [value])
+
   return (
-    <div className="grid grid-cols-2 gap-8">
-      <p className="text-left text-gray-500">{label}</p>
+    <div
+      className={classNames(
+        'grid grid-cols-2 gap-8 transition-colors duration-200 ease-in-out',
+        highlight ? 'bg-gray-700 text-white' : ''
+      )}
+    >
+      <p
+        className={classNames(
+          'text-left',
+          highlight ? 'text-white' : 'text-gray-500'
+        )}
+      >
+        {label}
+      </p>
       <p className="text-right font-bold">{value}</p>
     </div>
   )
