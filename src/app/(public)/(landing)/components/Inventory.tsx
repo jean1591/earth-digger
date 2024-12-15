@@ -2,35 +2,15 @@
 
 import { useEffect, useState } from 'react'
 
-import { Inventory as InventoryType } from '@/store/features/dashboard/slice'
 import { RootState } from '@/store/store'
 import { classNames } from '@/utils/classNames'
 import { useSelector } from 'react-redux'
 
 export const Inventory = () => {
-  const { inventory } = useSelector((state: RootState) => state.dashboard)
-
-  const displayRobots = (inventory: InventoryType) => {
-    const {
-      robots: { boosters, diggers, energy },
-    } = inventory
-    return [boosters, diggers, energy].some((value) => value > 0)
-  }
-
-  const displayMultipliers = (inventory: InventoryType) => {
-    const {
-      boosts: {
-        diggingSpeedMultiplier,
-        energyProductionMultiplier,
-        xpMultiplier,
-      },
-    } = inventory
-    return [
-      diggingSpeedMultiplier,
-      energyProductionMultiplier,
-      xpMultiplier,
-    ].some((value) => value > 1)
-  }
+  const {
+    inventory,
+    hud: { inventory: hudInventory },
+  } = useSelector((state: RootState) => state.dashboard)
 
   const {
     boosts: {
@@ -43,7 +23,7 @@ export const Inventory = () => {
 
   return (
     <div className="space-y-8">
-      {displayRobots(inventory) && (
+      {hudInventory.robots && (
         <div className="space-y-2">
           <p className="text-lg font-bold">Robots</p>
           <InventoryLine
@@ -60,7 +40,7 @@ export const Inventory = () => {
         </div>
       )}
 
-      {displayMultipliers(inventory) && (
+      {hudInventory.boosts && (
         <div className="space-y-2">
           <p className="text-lg font-bold">Multipliers</p>
           <InventoryLine

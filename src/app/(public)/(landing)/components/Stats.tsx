@@ -6,30 +6,32 @@ import { RootState } from '@/store/store'
 import { useSelector } from 'react-redux'
 
 export const Stats = () => {
-  const { depth, stats } = useSelector((state: RootState) => state.dashboard)
-  const { diggingSpeed, energyConsumption, energyProduction } = stats
+  const {
+    depth,
+    stats,
+    hud: { stats: hudStats },
+  } = useSelector((state: RootState) => state.dashboard)
 
   return (
     <div className="grid grid-cols-4 gap-4">
       <SimpleStatCard value={depth.toFixed(2)} unit="m" label="Depth" />
       <StatCard
-        display={diggingSpeed > 0}
+        display={hudStats.diggingSpeed}
         label="Digging speed"
         unit="m/s"
-        value={diggingSpeed.toFixed(2)}
+        value={stats.diggingSpeed.toFixed(2)}
       />
       <StatCard
-        display={energyConsumption > 0}
+        display={hudStats.energyConsumption}
         label="Energy consumption"
         unit="⚡️/s"
-        value={energyConsumption.toFixed(2)}
+        value={stats.energyConsumption.toFixed(2)}
       />
       <StatCard
-        /* Voluntarily use of consumption */
-        display={energyConsumption > 0}
+        display={hudStats.energyConsumption}
         label="Energy production"
         unit="⚡️/s"
-        value={energyProduction.toFixed(2)}
+        value={stats.energyProduction.toFixed(2)}
       />
     </div>
   )

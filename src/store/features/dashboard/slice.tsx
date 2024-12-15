@@ -5,6 +5,21 @@ export const ENERGY_PRODUCTION_PER_SECOND = 30
 const BASE_ENERGY_PRODUCTION = 30
 const BOOST_VALUE = 0.1
 
+export interface Stats {
+  diggingSpeed: number
+  energyConsumption: number
+  energyProduction: number
+}
+
+export type Hud = {
+  stats: {
+    diggingSpeed: boolean
+    energyConsumption: boolean
+    energyProduction: boolean
+  }
+  inventory: { boosts: boolean; robots: boolean }
+}
+
 export interface Inventory {
   robots: { manual: 1; diggers: number; energy: number; boosters: number }
   boosts: {
@@ -14,18 +29,13 @@ export interface Inventory {
   }
 }
 
-export interface Stats {
-  diggingSpeed: number
-  energyConsumption: number
-  energyProduction: number
-}
-
 export interface DashboardSlice {
   currentLevelXpBoundaries: { low: number; high: number }
   depth: number | 0
   level: number | 0
   inventory: Inventory
   stats: Stats
+  hud: Hud
 }
 
 const initialState: DashboardSlice = {
@@ -44,6 +54,14 @@ const initialState: DashboardSlice = {
     diggingSpeed: 0,
     energyConsumption: 0,
     energyProduction: BASE_ENERGY_PRODUCTION,
+  },
+  hud: {
+    stats: {
+      diggingSpeed: false,
+      energyConsumption: false,
+      energyProduction: false,
+    },
+    inventory: { boosts: false, robots: false },
   },
 }
 
