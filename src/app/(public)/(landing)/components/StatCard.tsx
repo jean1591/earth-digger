@@ -23,13 +23,15 @@ export const SimpleStatCard = ({
 }
 
 export const StatCard = ({
-  value,
-  unit,
+  display,
   label,
+  unit,
+  value,
 }: {
-  value: string
-  unit: string
+  display: boolean
   label: string
+  unit: string
+  value: string
 }) => {
   const [highlight, setHighlight] = useState(false)
 
@@ -41,6 +43,10 @@ export const StatCard = ({
 
     return () => clearTimeout(timeoutId)
   }, [value])
+
+  if (!display) {
+    return <></>
+  }
 
   return (
     <div

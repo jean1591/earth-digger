@@ -13,19 +13,23 @@ export const Stats = () => {
     <div className="grid grid-cols-4 gap-4">
       <SimpleStatCard value={depth.toFixed(2)} unit="m" label="Depth" />
       <StatCard
-        value={diggingSpeed.toFixed(2)}
-        unit="m/s"
+        display={diggingSpeed > 0}
         label="Digging speed"
+        unit="m/s"
+        value={diggingSpeed.toFixed(2)}
       />
       <StatCard
-        value={energyConsumption.toFixed(2)}
-        unit="⚡️/s"
+        display={energyConsumption > 0}
         label="Energy consumption"
+        unit="⚡️/s"
+        value={energyConsumption.toFixed(2)}
       />
       <StatCard
-        value={energyProduction.toFixed(2)}
-        unit="⚡️/s"
+        /* Voluntarily use of consumption */
+        display={energyConsumption > 0}
         label="Energy production"
+        unit="⚡️/s"
+        value={energyProduction.toFixed(2)}
       />
     </div>
   )

@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const ENERGY_CONSUMPTION_PER_SECOND = 20
 const ENERGY_PRODUCTION_PER_SECOND = 30
-const BASE_ENERGY_PRODUCTION = 80
+const BASE_ENERGY_PRODUCTION = 30
 
 export interface Inventory {
   robots: { manual: 1; diggers: number; energy: number; boosters: number }
@@ -102,10 +102,9 @@ export const dashboardSlice = createSlice({
       const { robots, boosts } = state.inventory
       const updatedEnergyCount = robots.energy + 1
       const updatedEnergyProduction =
-        updatedEnergyCount *
-          ENERGY_PRODUCTION_PER_SECOND *
-          boosts.energyProductionMultiplier +
-        BASE_ENERGY_PRODUCTION
+        (updatedEnergyCount * ENERGY_PRODUCTION_PER_SECOND +
+          BASE_ENERGY_PRODUCTION) *
+        boosts.energyProductionMultiplier
 
       state.inventory = {
         ...state.inventory,
@@ -123,7 +122,6 @@ export const dashboardSlice = createSlice({
         energyProduction: updatedEnergyProduction,
       })
     },
-    // TODO: seems to have a problem with the energy production formula
     addBooster: (state) => {
       const { robots, boosts } = state.inventory
       const { boosters, diggers, energy } = robots
