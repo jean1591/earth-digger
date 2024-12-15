@@ -28,7 +28,7 @@ export const Stats = () => {
         value={stats.energyConsumption.toFixed(2)}
       />
       <StatCard
-        display={hudStats.energyConsumption}
+        display={hudStats.energyProduction}
         label="Energy production"
         unit="⚡️/s"
         value={stats.energyProduction.toFixed(2)}

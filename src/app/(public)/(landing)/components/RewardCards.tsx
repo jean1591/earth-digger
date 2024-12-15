@@ -1,18 +1,21 @@
 'use client'
 
 import {
-  ENERGY_PRODUCTION_PER_SECOND,
-  Inventory,
+  BASE_ENERGY_PRODUCTION,
+  Hud,
   Stats,
   addBooster,
   addDigger,
   addEnergy,
+  addToHud,
   levelUp,
   upgradeDigger,
   upgradeEnergy,
 } from '@/store/features/dashboard/slice'
 import {
   PiBatteryCharging,
+  PiChartBar,
+  PiChartLine,
   PiGift,
   PiLightning,
   PiRecycle,
@@ -40,20 +43,29 @@ type PrizeFunction = () =>
   | ReturnType<typeof addBooster>
   | ReturnType<typeof addDigger>
   | ReturnType<typeof addEnergy>
+  | ReturnType<typeof addToHud>
   | ReturnType<typeof upgradeDigger>
   | ReturnType<typeof upgradeEnergy>
+
 type RewardType =
   | 'addBooster'
   | 'addDigger'
   | 'addEnergy'
+  | 'displayBoosts'
+  | 'displayDiggingSpeed'
+  | 'displayEnergyConsumption'
+  | 'displayEnergyProduction'
+  | 'displayRobots'
   | 'upgradeDigger'
   | 'upgradeEnergy'
+
 interface Reward {
   description: string
   icon: IconType
   label: string
   prize: PrizeFunction
 }
+
 type RewardMapper = Record<RewardType, Reward>
 
 const rewardsMapper: RewardMapper = {
@@ -87,11 +99,42 @@ const rewardsMapper: RewardMapper = {
     label: 'Energy upgrade',
     prize: upgradeEnergy,
   },
+  displayDiggingSpeed: {
+    description: 'Add metric to see current digging speed in real-time',
+    icon: PiChartLine,
+    label: 'Display digging speed',
+    prize: () => addToHud('diggingSpeed'),
+  },
+  displayEnergyConsumption: {
+    description: 'Add metric to see current energy consumption in real-time',
+    icon: PiChartLine,
+    label: 'Display energy consumption',
+    prize: () => addToHud('energyConsumption'),
+  },
+  displayEnergyProduction: {
+    description: 'Add metric to see current energy production in real-time',
+    icon: PiChartLine,
+    label: 'Display energy production',
+    prize: () => addToHud('energyProduction'),
+  },
+  displayRobots: {
+    description: 'Add metric to see current inventory of robots in real-time',
+    icon: PiChartBar,
+    label: 'Display robots count',
+    prize: () => addToHud('robots'),
+  },
+  displayBoosts: {
+    description:
+      'Add metric to see current inventory of multipliers in real-time',
+    icon: PiChartBar,
+    label: 'Display multipliers count',
+    prize: () => addToHud('boosts'),
+  },
 }
 
 const computeRewards = (
+  hud: Hud,
   level: number,
-  inventory: Inventory,
   stats: Stats
 ): RewardType[] => {
   const { energyConsumption, energyProduction } = stats
@@ -105,19 +148,47 @@ const computeRewards = (
   }
 
   if (level === 1) {
-    rewards.push('addDigger')
+    rewards.push('displayDiggingSpeed')
     rewards.push('addEnergy')
-    rewards.push('addBooster')
 
     return rewards
   }
 
-  // TODO: change to add display stats
-  if (energyConsumption >= energyProduction - ENERGY_PRODUCTION_PER_SECOND) {
+  if (energyConsumption >= energyProduction - BASE_ENERGY_PRODUCTION) {
     rewards.push('addEnergy')
   }
-
   rewards.push('addDigger')
+
+  if (!hud.stats.diggingSpeed) {
+    rewards.push('displayDiggingSpeed')
+
+    return rewards
+  }
+
+  if (!hud.stats.energyConsumption) {
+    rewards.push('displayEnergyConsumption')
+
+    return rewards
+  }
+
+  if (!hud.stats.energyProduction) {
+    rewards.push('displayEnergyProduction')
+
+    return rewards
+  }
+
+  if (!hud.inventory.robots) {
+    rewards.push('displayRobots')
+
+    return rewards
+  }
+
+  if (!hud.inventory.boosts) {
+    rewards.push('displayBoosts')
+
+    return rewards
+  }
+
   rewards.push('addBooster')
 
   return rewards
@@ -127,11 +198,11 @@ export const RewardCards = () => {
   const { displayRewardCards } = useSelector(
     (state: RootState) => state.interactions
   )
-  const { level, inventory, stats } = useSelector(
+  const { hud, level, stats } = useSelector(
     (state: RootState) => state.dashboard
   )
 
-  const rewards = computeRewards(level, inventory, stats)
+  const rewards = computeRewards(hud, level, stats)
 
   return (
     <Modal title="Level Up !" open={displayRewardCards} icon={PiGift}>

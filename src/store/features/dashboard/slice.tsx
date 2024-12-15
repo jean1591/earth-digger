@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const ENERGY_CONSUMPTION_PER_SECOND = 20
-export const ENERGY_PRODUCTION_PER_SECOND = 30
-const BASE_ENERGY_PRODUCTION = 30
+const ENERGY_PRODUCTION_PER_SECOND = 30
+export const BASE_ENERGY_PRODUCTION = 30
 const BOOST_VALUE = 0.1
 
 export interface Stats {
@@ -11,13 +11,13 @@ export interface Stats {
   energyProduction: number
 }
 
+type HudInventory = 'boosts' | 'robots'
+type HudStats = 'diggingSpeed' | 'energyConsumption' | 'energyProduction'
+type HudValues = HudInventory | HudStats
+
 export type Hud = {
-  stats: {
-    diggingSpeed: boolean
-    energyConsumption: boolean
-    energyProduction: boolean
-  }
-  inventory: { boosts: boolean; robots: boolean }
+  stats: Record<HudStats, boolean>
+  inventory: Record<HudInventory, boolean>
 }
 
 export interface Inventory {
@@ -240,6 +240,21 @@ export const dashboardSlice = createSlice({
 
       state.stats.energyProduction = updatedEnergyProduction
     },
+    addToHud: (state, action: PayloadAction<HudValues>) => {
+      const hudValue = action.payload
+
+      if (['boosts', 'robots'].includes(hudValue)) {
+        state.hud.inventory[hudValue as HudInventory] = true
+      }
+
+      if (
+        ['diggingSpeed', 'energyConsumption', 'energyProduction'].includes(
+          hudValue
+        )
+      ) {
+        state.hud.stats[hudValue as HudStats] = true
+      }
+    },
   },
 })
 
@@ -247,6 +262,7 @@ export const {
   addBooster,
   addDigger,
   addEnergy,
+  addToHud,
   incrementDepth,
   incrementXDepth,
   levelUp,
