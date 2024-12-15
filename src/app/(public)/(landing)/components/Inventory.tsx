@@ -22,22 +22,46 @@ export const Inventory = () => {
     <div className="space-y-8">
       <div className="space-y-2">
         <p className="text-lg font-bold">Robots</p>
-        <InventoryLine label="Diggers" value={diggers} />
-        <InventoryLine label="Energy" value={energy} />
-        <InventoryLine label="Boosters" value={boosters} />
+        <InventoryLine display={diggers > 0} label="Diggers" value={diggers} />
+        <InventoryLine display={energy > 0} label="Energy" value={energy} />
+        <InventoryLine
+          display={boosters > 0}
+          label="Boosters"
+          value={boosters}
+        />
       </div>
 
       <div className="space-y-2">
         <p className="text-lg font-bold">Multipliers</p>
-        <InventoryLine label="Digging speed" value={diggingSpeedMultiplier} />
-        <InventoryLine label="Energy" value={energyProductionMultiplier} />
-        <InventoryLine label="XP" value={xpMultiplier} />
+        <InventoryLine
+          display={diggingSpeedMultiplier > 1}
+          label="Digging speed"
+          value={diggingSpeedMultiplier}
+        />
+        <InventoryLine
+          display={energyProductionMultiplier > 1}
+          label="Energy"
+          value={energyProductionMultiplier}
+        />
+        <InventoryLine
+          display={xpMultiplier > 1}
+          label="XP"
+          value={xpMultiplier}
+        />
       </div>
     </div>
   )
 }
 
-const InventoryLine = ({ label, value }: { label: string; value: number }) => {
+const InventoryLine = ({
+  label,
+  value,
+  display,
+}: {
+  label: string
+  value: number
+  display: boolean
+}) => {
   const [highlight, setHighlight] = useState(false)
 
   useEffect(() => {
@@ -48,6 +72,10 @@ const InventoryLine = ({ label, value }: { label: string; value: number }) => {
 
     return () => clearTimeout(timeoutId)
   }, [value])
+
+  if (!display) {
+    return <></>
+  }
 
   return (
     <div
