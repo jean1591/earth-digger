@@ -38,8 +38,22 @@ export interface DashboardSlice {
   hud: Hud
 }
 
+const computeNextLevelFormula = (level: number) => {
+  let a = 0
+  let b = 1
+  let result = 0
+
+  for (let i = 0; i < level; i++) {
+    result = a + b
+    a = b
+    b = result
+  }
+
+  return result
+}
+
 const initialState: DashboardSlice = {
-  currentLevelXpBoundaries: { low: 0, high: 10 }, // Change to 60
+  currentLevelXpBoundaries: { low: 0, high: computeNextLevelFormula(1) },
   depth: 0,
   level: 0,
   inventory: {
@@ -88,9 +102,6 @@ const computeDiggingSpeed = ({
 
   return diggers * diggingSpeedMultiplier
 }
-
-const computeNextLevelFormula = (level: number) =>
-  Math.floor((4 * level ** 3) / 5) * 10
 
 export const dashboardSlice = createSlice({
   name: 'dashboardSlice',
@@ -185,11 +196,13 @@ export const dashboardSlice = createSlice({
       state.depth += action.payload
     },
     levelUp: (state) => {
+      console.log(state.currentLevelXpBoundaries)
       state.level += 1
       state.currentLevelXpBoundaries = {
         low: state.currentLevelXpBoundaries.high,
         high: computeNextLevelFormula(state.level + 1),
       }
+      console.log(state.currentLevelXpBoundaries)
     },
     upgradeDigger: (state) => {
       const { robots, boosts } = state.inventory

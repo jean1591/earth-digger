@@ -5,6 +5,7 @@ import { RewardCards } from './components/RewardCards'
 import { Stats } from './components/Stats'
 import { XpBar } from './components/XpBar'
 
+// TODO: add reward to display current level and next level XP
 export default function Home() {
   return (
     <div className="min-h-screen space-y-12">
