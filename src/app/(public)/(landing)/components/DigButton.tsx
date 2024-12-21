@@ -20,11 +20,12 @@ export const DigButton = () => {
   } = useSelector((state: RootState) => state.dashboard)
   const { state } = useSelector((state: RootState) => state.interactions)
 
+  // TODO: use request animation frame
   useEffect(() => {
     if (state === 'play') {
       const interval = setInterval(() => {
-        dispatch(incrementXDepth(diggingSpeed))
-      }, 1000)
+        dispatch(incrementXDepth(diggingSpeed / 10))
+      }, 100)
 
       return () => clearInterval(interval)
     }

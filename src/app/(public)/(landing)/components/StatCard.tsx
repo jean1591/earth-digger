@@ -2,22 +2,14 @@ import { classNames } from '@/utils/classNames'
 import { useEffect } from 'react'
 import { useState } from 'react'
 
-export const SimpleStatCard = ({
-  value,
-  unit,
-  label,
-}: {
-  value: string
-  unit: string
-  label: string
-}) => {
+export const DepthCard = ({ depth }: { depth: string }) => {
   return (
     <div className="rounded-lg bg-white p-4 shadow-md">
       <div className="flex items-baseline">
-        <span className="text-3xl font-bold text-gray-900">{value}</span>
-        <span className="ml-1 text-xl text-gray-500">{unit}</span>
+        <span className="text-3xl font-bold text-gray-900">{depth}</span>
+        <span className="ml-1 text-xl text-gray-500">m</span>
       </div>
-      <p className="mt-1 text-sm text-gray-600">{label}</p>
+      <p className="mt-1 text-sm text-gray-600">Depth</p>
     </div>
   )
 }
