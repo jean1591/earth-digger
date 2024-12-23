@@ -60,9 +60,7 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en" className="scroll-smooth">
-        <body
-          className={classNames(inter.className, 'bg-slate-50 text-slate-900')}
-        >
+        <body className={classNames(inter.className, 'bg-zinc-900 text-white')}>
           <NextAuthProvider>
             <Script
               defer
