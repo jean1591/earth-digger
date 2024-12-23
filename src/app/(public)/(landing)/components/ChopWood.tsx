@@ -4,7 +4,7 @@ import { incrementDepth } from '@/store/features/dashboard/slice'
 import { resumeGame } from '@/store/features/interactions/slice'
 import { useDispatch } from 'react-redux'
 
-export const DigButton = () => {
+export const ChopWood = () => {
   const dispatch = useDispatch()
 
   const handleOnClick = () => {
