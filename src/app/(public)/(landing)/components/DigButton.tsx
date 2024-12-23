@@ -1,35 +1,11 @@
 'use client'
 
-import {
-  incrementDepth,
-  incrementXDepth,
-} from '@/store/features/dashboard/slice'
-import { useDispatch, useSelector } from 'react-redux'
-
-import { RootState } from '@/store/store'
+import { incrementDepth } from '@/store/features/dashboard/slice'
 import { resumeGame } from '@/store/features/interactions/slice'
-import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
 export const DigButton = () => {
   const dispatch = useDispatch()
-  const {
-    inventory: {
-      robots: { diggers },
-    },
-    stats: { diggingSpeed },
-  } = useSelector((state: RootState) => state.dashboard)
-  const { state } = useSelector((state: RootState) => state.interactions)
-
-  // TODO: use request animation frame
-  useEffect(() => {
-    if (state === 'play') {
-      const interval = setInterval(() => {
-        dispatch(incrementXDepth(diggingSpeed / 10))
-      }, 100)
-
-      return () => clearInterval(interval)
-    }
-  }, [diggers, state])
 
   const handleOnClick = () => {
     dispatch(incrementDepth())
