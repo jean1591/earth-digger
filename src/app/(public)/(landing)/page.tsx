@@ -8,12 +8,14 @@ export default function Home() {
   return (
     <div className="min-h-screen space-y-12 py-12">
       <Container size="xsmall">
-        <div className="flex items-center justify-between">
-          <ChopWood />
+        <div className="flex items-start justify-between">
+          <div>
+            <Generators />
+            <ChopWood />
+          </div>
+
           <Stats />
         </div>
-
-        <Generators />
 
         <OnboardingModal />
       </Container>

@@ -1,19 +1,27 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-type HudValues = 'woodChopper'
+import { costNextFormula } from '@/utils/costNextFormula'
+
+const params = {
+  woodChopper: { costBase: 10, growthRate: 1.1 },
+}
+
+type HudValues = 'woodChoppers'
 
 interface DashboardSlice {
+  costs: { woodChopper: number }
   hud: Record<HudValues, boolean>
   watt: number
-  woodChopper: number
+  woodChoppers: number
 }
 
 const initialState: DashboardSlice = {
+  costs: { woodChopper: 10 },
   hud: {
-    woodChopper: false,
+    woodChoppers: false,
   },
   watt: 0,
-  woodChopper: 0,
+  woodChoppers: 0,
 }
 
 export const dashboardSlice = createSlice({
@@ -21,7 +29,14 @@ export const dashboardSlice = createSlice({
   initialState,
   reducers: {
     addWoodChopper: (state, action: PayloadAction<number>) => {
-      state.woodChopper += action.payload
+      state.woodChoppers += action.payload
+
+      state.watt -= state.costs.woodChopper
+      state.costs.woodChopper = costNextFormula({
+        costBase: params.woodChopper.costBase,
+        growthRate: params.woodChopper.growthRate,
+        quantityOwned: state.woodChoppers,
+      })
     },
     incrementWatt: (state) => {
       state.watt += 1
