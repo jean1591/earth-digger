@@ -7,6 +7,7 @@ import { Modal } from '@/components/Modal'
 import { PiGraduationCap } from 'react-icons/pi'
 import { RootState } from '@/store/store'
 import { setDisplayOnbardingModal } from '@/store/features/interactions/slice'
+import { useEffect } from 'react'
 
 export const OnboardingModal = () => {
   const dispatch = useDispatch()
@@ -16,9 +17,11 @@ export const OnboardingModal = () => {
   )
   const { watt } = useSelector((state: RootState) => state.dashboard)
 
-  if (watt === 1) {
-    dispatch(setDisplayOnbardingModal(true))
-  }
+  useEffect(() => {
+    if (watt === 1) {
+      dispatch(setDisplayOnbardingModal(true))
+    }
+  }, [watt, dispatch])
 
   return (
     <Modal
