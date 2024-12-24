@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 import { costNextFormula } from '@/utils/costNextFormula'
 
-const params = {
+export const initialParams = {
   woodChopper: { costBase: 10, growthRate: 1.1 },
 }
 
@@ -33,8 +33,8 @@ export const dashboardSlice = createSlice({
 
       state.watt -= state.costs.woodChopper
       state.costs.woodChopper = costNextFormula({
-        costBase: params.woodChopper.costBase,
-        growthRate: params.woodChopper.growthRate,
+        costBase: initialParams.woodChopper.costBase,
+        growthRate: initialParams.woodChopper.growthRate,
         quantityOwned: state.woodChoppers,
       })
     },

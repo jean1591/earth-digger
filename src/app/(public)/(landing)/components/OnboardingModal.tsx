@@ -3,35 +3,16 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 
-import { ChopWood } from './ChopWood'
+import { ChopFirstWood } from './onboarding/ChopFirstWood'
+import { HireWoodChopperTutorial } from './onboarding/HireWoodChopperTutorial'
 import { Modal } from '@/components/Modal'
 import { PiGraduationCap } from 'react-icons/pi'
 import { RootState } from '@/store/store'
 import { setDisplayOnbardingModal } from '@/store/features/interactions/slice'
 
-const ChopFirstWood = () => {
-  const dispatch = useDispatch()
-
-  const closeChopFirstWoodModal = () => {
-    dispatch(setDisplayOnbardingModal(false))
-  }
-
-  return (
-    <div className="space-y-4">
-      <p>
-        All resources (except Science) are automatically transformed into watts
-        when harvested.
-      </p>
-      <div className="flex items-center justify-between">
-        <p>Continue chopping wood to increase watts !</p>
-        <ChopWood additionalMethod={closeChopFirstWoodModal} />
-      </div>
-    </div>
-  )
-}
-
 const mapper: Record<string, () => JSX.Element> = {
   chopFirstWood: () => <ChopFirstWood />,
+  hireWoodChopperTutorial: () => <HireWoodChopperTutorial />,
 }
 
 export const OnboardingModal = () => {
@@ -46,6 +27,11 @@ export const OnboardingModal = () => {
   useEffect(() => {
     if (watt === 1) {
       setComponent(mapper.chopFirstWood())
+      dispatch(setDisplayOnbardingModal(true))
+    }
+
+    if (watt === 10) {
+      setComponent(mapper.hireWoodChopperTutorial())
       dispatch(setDisplayOnbardingModal(true))
     }
   }, [watt, dispatch])
