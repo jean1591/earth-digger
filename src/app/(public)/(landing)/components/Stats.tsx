@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 
 export const Stats = () => {
   const { watt } = useSelector((state: RootState) => state.dashboard)
-
-  return <div className="text-white">{watt}</div>
+  return (
+    <div className="rounded-sm border border-white px-4 py-2">{watt} watts</div>
+  )
 }

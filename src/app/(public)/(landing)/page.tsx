@@ -7,8 +7,10 @@ export default function Home() {
   return (
     <div className="min-h-screen space-y-12 py-12">
       <Container size="xsmall">
-        <ChopWood />
-        <Stats />
+        <div className="flex items-center justify-between">
+          <ChopWood />
+          <Stats />
+        </div>
 
         <OnboardingModal />
       </Container>
