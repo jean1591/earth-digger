@@ -1,11 +1,7 @@
 'use client'
 
-import {
-  resumeGame,
-  setDisplayOnbardingModal,
-} from '@/store/features/interactions/slice'
-
 import { incrementWatt } from '@/store/features/dashboard/slice'
+import { resumeGame } from '@/store/features/interactions/slice'
 import { useDispatch } from 'react-redux'
 
 export const ChopWood = () => {
@@ -14,7 +10,6 @@ export const ChopWood = () => {
   const handleOnClick = () => {
     dispatch(incrementWatt())
     dispatch(resumeGame())
-    dispatch(setDisplayOnbardingModal(false))
   }
 
   return (

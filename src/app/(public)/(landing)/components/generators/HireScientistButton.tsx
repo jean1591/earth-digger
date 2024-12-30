@@ -1,6 +1,5 @@
 import { addScientist, updateHud } from '@/store/features/dashboard/slice'
 
-import { setDisplayOnbardingModal } from '@/store/features/interactions/slice'
 import { useDispatch } from 'react-redux'
 
 export const HireScientistButton = ({
@@ -15,7 +14,6 @@ export const HireScientistButton = ({
   const handleAddSientist = () => {
     dispatch(addScientist(1))
     dispatch(updateHud('scientists'))
-    dispatch(setDisplayOnbardingModal(false))
   }
 
   return (

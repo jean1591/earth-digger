@@ -1,6 +1,5 @@
 import { addWoodChopper, updateHud } from '@/store/features/dashboard/slice'
 
-import { setDisplayOnbardingModal } from '@/store/features/interactions/slice'
 import { useDispatch } from 'react-redux'
 
 export const HireWoodChopperButton = ({
@@ -15,7 +14,6 @@ export const HireWoodChopperButton = ({
   const handleAddWoodChopper = () => {
     dispatch(addWoodChopper(1))
     dispatch(updateHud('woodChoppers'))
-    dispatch(setDisplayOnbardingModal(false))
   }
 
   return (
