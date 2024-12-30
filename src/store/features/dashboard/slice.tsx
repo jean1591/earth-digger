@@ -4,30 +4,51 @@ import { costNextFormula } from '@/utils/costNextFormula'
 
 export const initialParams = {
   woodChopper: { costBase: 10, growthRate: 1.1 },
+  scientist: { costBase: 100, growthRate: 1.05 },
 }
 
-type HudValues = 'woodChoppers'
+type HudValues = 'scientists' | 'woodChoppers'
 
+// Add generators attribute for woodChoppers and scientists
+// Add resource attribute for watt and science
 interface DashboardSlice {
-  costs: { woodChopper: number }
+  costs: { scientist: number; woodChopper: number }
   hud: Record<HudValues, boolean>
+  science: number
   watt: number
   woodChoppers: number
+  scientists: number
 }
 
 const initialState: DashboardSlice = {
-  costs: { woodChopper: 10 },
+  costs: {
+    scientist: initialParams.scientist.costBase,
+    woodChopper: initialParams.woodChopper.costBase,
+  },
   hud: {
+    scientists: false,
     woodChoppers: false,
   },
+  science: 0,
   watt: 0,
   woodChoppers: 0,
+  scientists: 0,
 }
 
 export const dashboardSlice = createSlice({
   name: 'dashboardSlice',
   initialState,
   reducers: {
+    addScientist: (state, action: PayloadAction<number>) => {
+      state.scientists += action.payload
+
+      state.watt -= state.costs.scientist
+      state.costs.scientist = costNextFormula({
+        costBase: initialParams.scientist.costBase,
+        growthRate: initialParams.scientist.growthRate,
+        quantityOwned: state.scientists,
+      })
+    },
     addWoodChopper: (state, action: PayloadAction<number>) => {
       state.woodChoppers += action.payload
 
@@ -44,13 +65,22 @@ export const dashboardSlice = createSlice({
     incrementXWatt: (state, action: PayloadAction<number>) => {
       state.watt += action.payload
     },
+    incrementXScience: (state, action: PayloadAction<number>) => {
+      state.science += action.payload
+    },
     updateHud: (state, action: PayloadAction<HudValues>) => {
       state.hud = { ...state.hud, [action.payload]: true }
     },
   },
 })
 
-export const { addWoodChopper, incrementWatt, incrementXWatt, updateHud } =
-  dashboardSlice.actions
+export const {
+  addScientist,
+  addWoodChopper,
+  incrementWatt,
+  incrementXScience,
+  incrementXWatt,
+  updateHud,
+} = dashboardSlice.actions
 
 export default dashboardSlice.reducer

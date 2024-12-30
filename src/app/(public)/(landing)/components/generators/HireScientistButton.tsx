@@ -1,9 +1,9 @@
-import { addWoodChopper, updateHud } from '@/store/features/dashboard/slice'
+import { addScientist, updateHud } from '@/store/features/dashboard/slice'
 
 import { setDisplayOnbardingModal } from '@/store/features/interactions/slice'
 import { useDispatch } from 'react-redux'
 
-export const HireWoodChopperButton = ({
+export const HireScientistButton = ({
   costs,
   disabled,
 }: {
@@ -12,19 +12,19 @@ export const HireWoodChopperButton = ({
 }) => {
   const dispatch = useDispatch()
 
-  const handleAddWoodChopper = () => {
-    dispatch(addWoodChopper(1))
-    dispatch(updateHud('woodChoppers'))
+  const handleAddSientist = () => {
+    dispatch(addScientist(1))
+    dispatch(updateHud('scientists'))
     dispatch(setDisplayOnbardingModal(false))
   }
 
   return (
     <button
       disabled={disabled}
-      onClick={handleAddWoodChopper}
+      onClick={handleAddSientist}
       className="min-w-24 rounded-sm border border-white px-4 py-2 text-left transition-colors duration-300 ease-in-out hover:bg-zinc-800 disabled:border-zinc-700 disabled:text-zinc-700"
     >
-      <p>🪓 Hire wood chopper</p>
+      <p>🧪 Hire scientist</p>
       <p className="text-sm">Costs: {costs} watts</p>
     </button>
   )

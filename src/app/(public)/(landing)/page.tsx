@@ -1,7 +1,6 @@
 import { ChopWood } from './components/ChopWood'
 import { Container } from '@/components/Container'
 import { Generators } from './components/Generators'
-import { OnboardingModal } from './components/OnboardingModal'
 import { Stats } from './components/Stats'
 
 export default function Home() {
@@ -17,8 +16,6 @@ export default function Home() {
             <Generators />
             <ChopWood />
           </div>
-
-          <OnboardingModal />
         </div>
       </Container>
     </div>
