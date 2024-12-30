@@ -3,6 +3,7 @@
 import {
   incrementXScience,
   incrementXWatt,
+  playTick,
   updateHud,
 } from '@/store/features/dashboard/slice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -34,12 +35,10 @@ export const Generators = () => {
     }
   }, [watt])
 
-  // TODO: move increment logic to slice
   useEffect(() => {
     if (state === 'play') {
       const interval = setInterval(() => {
-        dispatch(incrementXWatt(woodChoppers / 10))
-        dispatch(incrementXScience(scientists / 1000))
+        dispatch(playTick())
       }, 100)
 
       return () => clearInterval(interval)

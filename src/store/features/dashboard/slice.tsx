@@ -68,6 +68,11 @@ export const dashboardSlice = createSlice({
     incrementXScience: (state, action: PayloadAction<number>) => {
       state.science += action.payload
     },
+    // Tick is played every 100ms (10 times per second)
+    playTick: (state) => {
+      state.watt += state.woodChoppers / 10
+      state.science += state.scientists / 1000
+    },
     updateHud: (state, action: PayloadAction<HudValues>) => {
       state.hud = { ...state.hud, [action.payload]: true }
     },
@@ -80,6 +85,7 @@ export const {
   incrementWatt,
   incrementXScience,
   incrementXWatt,
+  playTick,
   updateHud,
 } = dashboardSlice.actions
 
